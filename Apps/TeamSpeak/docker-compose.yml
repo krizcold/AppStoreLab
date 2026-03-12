@@ -41,6 +41,7 @@ services:
       caddy_1.reverse_proxy: "{{upstreams 80}}"
       caddy_2: teamspeak-${PUBLIC_IP_DASH}.sslip.io
       caddy_2.reverse_proxy: "{{upstreams 80}}"
+    entrypoint: ["sh", "-c", "sed -i 's/app.listen(config.port/app.listen(config.port, \"0.0.0.0\"/' /app/packages/server/app.js && exec npm start --prefix ./packages/server"]
     environment:
       PORT: 80
       WHITELIST: ts3server

@@ -1,4 +1,4 @@
-name: Nginx
+name: nginx
 
 services:
   nginx:
@@ -12,10 +12,10 @@ services:
       caddy_0: nginx-${APP_DOMAIN}
       caddy_0.import: gateway_tls
       caddy_0.reverse_proxy: "{{upstreams 80}}"
-      caddy_1: nginx-${PUBLIC_IP_DASH}.nip.io
+      caddy_1: nginx-${APP_PUBLIC_IP_DASH}.nip.io
       caddy_1.import: gateway_tls
       caddy_1.reverse_proxy: "{{upstreams 80}}"
-      caddy_2: nginx-${PUBLIC_IP_DASH}.sslip.io
+      caddy_2: nginx-${APP_PUBLIC_IP_DASH}.sslip.io
       caddy_2.reverse_proxy: "{{upstreams 80}}"
     networks:
       - pcs
@@ -40,6 +40,11 @@ services:
           memory: 64M
           cpus: '0.25'
     cpu_shares: 50
+
+networks:
+  pcs:
+    name: pcs
+    external: true
 
 x-casaos:
   architectures:
@@ -69,7 +74,7 @@ x-casaos:
       • **Zero Configuration** — Drop your files in and start serving immediately
       • **Lightning Fast** — nginx delivers static content faster than any alternative
       • **Minimal Resources** — Runs efficiently with just 64MB RAM
-      • **Clean URLs** — Automatic HTTPS access via NSL.SH routing
+      • **Clean URLs** — Automatic HTTPS access via Caddy reverse proxy
       • **Modern Web Support** — Full support for SPAs, PWAs, and modern JavaScript
       • **Production Ready** — Battle-tested nginx powers 30% of the internet
 
@@ -116,19 +121,19 @@ x-casaos:
       • **零配置** — 放入文件即可立即开始服务
       • **闪电般快速** — nginx 比任何替代方案都更快地传递静态内容
       • **最小资源** — 仅需 64MB RAM 即可高效运行
-      • **清洁 URL** — 通过 NSL.SH 路由自动 HTTPS 访问
+      • **清洁 URL** — 通过 Caddy 反向代理自动 HTTPS 访问
       • **现代 Web 支持** — 完全支持 SPA、PWA 和现代 JavaScript
       • **生产就绪** — 经过实战检验的 nginx 为 30% 的互联网提供动力
 
       只需将您的 HTML、CSS、JavaScript 和资源上传到 `/DATA/AppData/Nginx/www/`，您的网站就会立即上线。无需数据库，无需复杂配置，只需纯静态文件托管。
   developer: nginx
-  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Nginx/icon.png
+  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Nginx/icon.png
   screenshot_link:
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Nginx/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Nginx/screenshot-1.png
   tagline:
     en_us: Lightning-fast static website hosting powered by nginx
     zh_cn: 由 nginx 提供支持的闪电般快速静态网站托管
-  thumbnail: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Nginx/thumbnail.png
+  thumbnail: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Nginx/thumbnail.png
   tips:
     before_install:
       en_us: |
@@ -139,7 +144,9 @@ x-casaos:
         **Quick Start:**
         1. Install the app
         2. Upload your website files to the www directory
-        3. Access your site at: `https://nginx-$APP_DOMAIN/`
+        3. Access your site at:
+           - Via domain: `https://nginx-$APP_DOMAIN/`
+           - Direct IP: `https://nginx-$APP_PUBLIC_IP_DASH.sslip.io/`
 
         **File Structure:**
         ```
@@ -148,23 +155,15 @@ x-casaos:
         │   └── index.html   # Main page
         └── nginx.conf       # nginx configuration
         ```
-        
-        **IPv6 Direct Access:**
-        Then access your site at: `http://[$APP_PUBLIC_IPV6]`
   title:
     en_us: Nginx
   index: /
   pre-install-cmd: |
     mkdir -p /DATA/AppData/Nginx/www &&
     if [ ! -f /DATA/AppData/Nginx/www/index.html ]; then
-      wget -q https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Nginx/pre-install/index.html -O /DATA/AppData/Nginx/www/index.html
+      wget -q https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Nginx/pre-install/index.html -O /DATA/AppData/Nginx/www/index.html
     fi &&
     if [ ! -f /DATA/AppData/Nginx/nginx.conf ]; then
-      wget -q https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Nginx/pre-install/nginx.conf -O /DATA/AppData/Nginx/nginx.conf
+      wget -q https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Nginx/pre-install/nginx.conf -O /DATA/AppData/Nginx/nginx.conf
     fi &&
     chmod -R 755 /DATA/AppData/nginx
-
-networks:
-  pcs:
-    name: pcs
-    external: true

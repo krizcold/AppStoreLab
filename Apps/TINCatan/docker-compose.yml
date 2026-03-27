@@ -3,17 +3,6 @@ services:
   tincatan:
     image: maven:3.8-openjdk-8
     user: $PUID:$PGID
-    labels:
-      caddy_0: tincatan-${APP_DOMAIN}
-      caddy_0.import: gateway_tls
-      caddy_0.reverse_proxy: "{{upstreams 4567}}"
-      caddy_1: tincatan-${PUBLIC_IP_DASH}.nip.io
-      caddy_1.import: gateway_tls
-      caddy_1.reverse_proxy: "{{upstreams 4567}}"
-      caddy_2: tincatan-${PUBLIC_IP_DASH}.sslip.io
-      caddy_2.reverse_proxy: "{{upstreams 4567}}"
-    networks:
-      - pcs
     deploy:
       resources:
         limits:
@@ -21,14 +10,25 @@ services:
           cpus: '1.0'
     expose:
       - 4567
+    labels:
+      caddy_0: tincatan-${APP_DOMAIN}
+      caddy_0.import: gateway_tls
+      caddy_0.reverse_proxy: "{{upstreams 4567}}"
+      caddy_1: tincatan-${APP_PUBLIC_IP_DASH}.nip.io
+      caddy_1.import: gateway_tls
+      caddy_1.reverse_proxy: "{{upstreams 4567}}"
+      caddy_2: tincatan-${APP_PUBLIC_IP_DASH}.sslip.io
+      caddy_2.reverse_proxy: "{{upstreams 4567}}"
+    networks:
+      - pcs
     environment:
       PUID: $PUID
       PGID: $PGID
       TZ: $TZ
       MAVEN_OPTS: "-Xmx1024m"
     volumes:
-      - /DATA/AppData/tincatan/app:/app
-      - /DATA/AppData/tincatan/m2:/root/.m2
+      - /DATA/AppData/tincatan/app/:/app
+      - /DATA/AppData/tincatan/m2/:/root/.m2
     working_dir: /app
     command: >
       sh -c "
@@ -62,15 +62,11 @@ x-casaos:
   category: Games
   author: CasaOS Team
   developer: Sean Segal & Contributors
-  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/TINCatan/icon.png
-  screenshot_1: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/TINCatan/screenshot-1.png
-  screenshot_2: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/TINCatan/screenshot-2.png
-  screenshot_3: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/TINCatan/screenshot-3.png
-  thumbnail: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/TINCatan/thumbnail.png
-  pre-install-cmd: |
-    mkdir -p /DATA/AppData/tincatan/app &&
-    mkdir -p /DATA/AppData/tincatan/m2 &&
-    chown -R $PUID:$PGID /DATA/AppData/tincatan
+  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/TINCatan/icon.png
+  screenshot_1: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/TINCatan/screenshot-1.png
+  screenshot_2: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/TINCatan/screenshot-2.png
+  screenshot_3: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/TINCatan/screenshot-3.png
+  thumbnail: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/TINCatan/thumbnail.png
   title:
     en_us: TINC - Settlers of Catan
   tagline:
@@ -141,7 +137,7 @@ x-casaos:
         ## 🎮 How to Access
         
         Open your browser and navigate to:
-        - **Clean URL**: `https://4567-tincatan-[username].nsl.sh/`
+        - **Clean URL**: `https://tincatan-username.nsl.sh/`
         - **Local Access**: `http://[server-ip]:4567/`
         
         ## ⚠️ First Run Setup
@@ -203,15 +199,15 @@ x-casaos:
         - Use Chrome for best performance
         - The game saves state between sessions
       fr_fr: |
-        Accédez au jeu: `https://4567-tincatan-[username].nsl.sh/`
+        Accédez au jeu: `https://tincatan-username.nsl.sh/`
         Premier démarrage: 5-10 minutes pour compiler avec Maven.
       ko_kr: |
-        게임 접속: `https://4567-tincatan-[username].nsl.sh/`
+        게임 접속: `https://tincatan-username.nsl.sh/`
         첫 실행: Maven 컴파일에 5-10분 소요.
       zh_cn: |
-        访问游戏：`https://4567-tincatan-[username].nsl.sh/`
+        访问游戏：`https://tincatan-username.nsl.sh/`
         首次运行：Maven编译需要5-10分钟。
       es_es: |
-        Accede al juego: `https://4567-tincatan-[username].nsl.sh/`
+        Accede al juego: `https://tincatan-username.nsl.sh/`
         Primera ejecución: 5-10 minutos para compilar con Maven.
   index: /home

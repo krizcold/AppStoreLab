@@ -2,7 +2,7 @@ name: samba
 services:
   samba:
     container_name: samba
-    image: dockurr/samba:4.21
+    image: dockurr/samba:4.23.5
     network_mode: bridge
     restart: unless-stopped
     user: 0:0  # Run as root for full permissions
@@ -43,7 +43,7 @@ x-casaos:
   scheme: https
   hostname: raw.githack.com
   port_map: "443"
-  index: /worph/AppStore/main/Apps/Samba/doc/index.html
+  index: /Yundera/AppStore/main/Apps/Samba/doc/index.html
 
 
   architectures:
@@ -96,15 +96,14 @@ x-casaos:
       
       非常适合家庭网络、小型办公室或任何需要可靠文件共享而无需云依赖的地方。基于成熟的 Samba 技术构建，资源使用最少，兼容性最大。
   developer: Dockur
-  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Samba/icon.png
+  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Samba/icon.png
   screenshot_link:
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Samba/screenshot-1.png
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Samba/screenshot-2.png
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Samba/screenshot-3.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Samba/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Samba/screenshot-2.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Samba/screenshot-3.png
   tagline:
     en_us: Universal Samba file server - native network file sharing for all devices
     zh_cn: 通用 Samba 文件服务器 - 所有设备的原生网络文件共享
-  thumbnail: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Samba/thumbnail.png
   tips:
     before_install:
       en_us: |

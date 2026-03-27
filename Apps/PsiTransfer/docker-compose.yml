@@ -2,30 +2,28 @@ name: psitransfer
 
 services:
   psitransfer:
-    image: psitrax/psitransfer:v2.3.0
+    image: psitrax/psitransfer:v2.4.0
     container_name: psitransfer
     user: 0:0
     restart: unless-stopped
-
+    
     deploy:
       resources:
         limits:
           memory: 512M
           cpus: '0.5'
-
+    
     expose:
       - 80
-
     labels:
       caddy_0: psitransfer-${APP_DOMAIN}
       caddy_0.import: gateway_tls
       caddy_0.reverse_proxy: "{{upstreams 80}}"
-      caddy_1: psitransfer-${PUBLIC_IP_DASH}.nip.io
+      caddy_1: psitransfer-${APP_PUBLIC_IP_DASH}.nip.io
       caddy_1.import: gateway_tls
       caddy_1.reverse_proxy: "{{upstreams 80}}"
-      caddy_2: psitransfer-${PUBLIC_IP_DASH}.sslip.io
+      caddy_2: psitransfer-${APP_PUBLIC_IP_DASH}.sslip.io
       caddy_2.reverse_proxy: "{{upstreams 80}}"
-
     networks:
       - pcs
 
@@ -41,15 +39,8 @@ services:
       - PSITRANSFER_IFACE=0.0.0.0
     
     volumes:
-      - /DATA/AppData/$AppID/data:/data
-      - /DATA/AppData/$AppID/config:/app/config
-    
-    healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s  # 앱 시작 대기 시간 증가
+      - /DATA/AppData/$AppID/data/:/data
+      - /DATA/AppData/$AppID/config/:/app/config
 
 networks:
   pcs:
@@ -63,9 +54,6 @@ x-casaos:
   main: psitransfer
   author: CasaOS Team
   category: Utilities
-  pre-install-cmd: |
-    mkdir -p /DATA/AppData/$AppID/data /DATA/AppData/$AppID/config &&
-    chmod -R 777 /DATA/AppData/$AppID/data
   description:
     en_us: |
       PsiTransfer is a simple, open-source, self-hosted file sharing solution. It's designed as a lightweight alternative to WeTransfer with powerful features:
@@ -98,15 +86,15 @@ x-casaos:
       
       클라우드 서비스에 의존하지 않고 동료, 고객 또는 친구와 대용량 파일을 공유하는 데 완벽합니다.
   developer: psi-4ward
-  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/PsiTransfer/icon.png
+  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/PsiTransfer/icon.png
   screenshot_link:
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/PsiTransfer/screenshot-1.png
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/PsiTransfer/screenshot-2.png
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/PsiTransfer/screenshot-3.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/PsiTransfer/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/PsiTransfer/screenshot-2.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/PsiTransfer/screenshot-3.png
   tagline:
     en_us: Simple, lightweight file sharing - WeTransfer alternative
     ko_kr: 간단하고 가벼운 파일 공유 - WeTransfer 대안
-  thumbnail: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/PsiTransfer/thumbnail.png
+  thumbnail: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/PsiTransfer/thumbnail.png
   title:
     en_us: PsiTransfer
   index: /

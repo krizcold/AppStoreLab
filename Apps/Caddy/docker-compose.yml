@@ -6,11 +6,19 @@ services:
     container_name: caddy
     user: $PUID:$PGID
     restart: unless-stopped
-    network_mode: bridge
-    ports:
-      - 443:443
     expose:
       - 80
+    labels:
+      caddy_0: caddy-${APP_DOMAIN}
+      caddy_0.import: gateway_tls
+      caddy_0.reverse_proxy: "{{upstreams 80}}"
+      caddy_1: caddy-${APP_PUBLIC_IP_DASH}.nip.io
+      caddy_1.import: gateway_tls
+      caddy_1.reverse_proxy: "{{upstreams 80}}"
+      caddy_2: caddy-${APP_PUBLIC_IP_DASH}.sslip.io
+      caddy_2.reverse_proxy: "{{upstreams 80}}"
+    networks:
+      - pcs
     volumes:
       - type: bind
         source: /DATA/AppData/caddy/www/
@@ -36,6 +44,11 @@ services:
           memory: 128M
           cpus: '0.25'
     cpu_shares: 50
+
+networks:
+  pcs:
+    name: pcs
+    external: true
 
 x-casaos:
   architectures:
@@ -67,7 +80,7 @@ x-casaos:
       * **Zero Configuration** - Drop your files in and start serving immediately
       * **Modern & Fast** - Built in Go for high performance and low memory usage
       * **IPv4 + IPv6** - Full dual-stack support for modern networks
-      * **Clean URLs** - Automatic HTTPS access via NSL.SH routing
+      * **Clean URLs** - Automatic HTTPS access via Caddy reverse proxy
       * **Modern Web Support** - Full support for SPAs, PWAs, and modern JavaScript
       * **Production Ready** - Battle-tested server trusted by thousands of sites
 
@@ -116,17 +129,17 @@ x-casaos:
       * **零配置** - 放入文件即可立即开始服务
       * **现代且快速** - 使用 Go 构建，高性能低内存
       * **IPv4 + IPv6** - 完全支持双栈网络
-      * **清洁 URL** - 通过 NSL.SH 路由自动 HTTPS 访问
+      * **清洁 URL** - 通过 Caddy 反向代理自动 HTTPS 访问
       * **现代 Web 支持** - 完全支持 SPA、PWA 和现代 JavaScript
       * **生产就绪** - 经过实战检验，深受数千网站信赖
 
       只需将您的 HTML、CSS、JavaScript 和资源上传到 `/DATA/AppData/caddy/www/`，您的网站就会立即上线并启用 HTTPS。无需数据库，无需复杂配置，只需带有自动 TLS 的纯静态文件托管。
   developer: Caddy
-  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Caddy/icon.png
+  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Caddy/icon.png
   screenshot_link:
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Caddy/screenshot-1.png
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Caddy/screenshot-2.png
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Caddy/screenshot-3.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Caddy/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Caddy/screenshot-2.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Caddy/screenshot-3.png
   tagline:
     en_us: Secure static website hosting with automatic HTTPS
     zh_cn: 具有自动 HTTPS 的安全静态网站托管
@@ -152,25 +165,18 @@ x-casaos:
         └── config/          # Caddy config storage
         ```
 
-        **Access Methods:**
-        - **NSL.SH (internal):** `https://caddy-$APP_DOMAIN/` - HTTPS handled by NSL
-        - **Custom domain (external):** Point your domain to port 443 for direct TLS
-        
-        **IPv6 Direct Access:**
-        Then access your site at: `https://[$APP_PUBLIC_IPV6]`
-
-        **Custom Domain Access:**
-        Port 443 is exposed for external access with self-signed TLS.
-        Your browser may show a security warning - click "Advanced" and "Proceed".
+        **Access:**
+        - Via domain: `https://caddy-$APP_DOMAIN/`
+        - Direct IP: `https://caddy-$APP_PUBLIC_IP_DASH.sslip.io/`
   title:
     en_us: Caddy
   index: /
   pre-install-cmd: |
     mkdir -p /DATA/AppData/caddy/{www,data,config} &&
     if [ ! -f /DATA/AppData/caddy/www/index.html ]; then
-      wget -q https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Caddy/pre-install/index.html -O /DATA/AppData/caddy/www/index.html
+      wget -q https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Caddy/pre-install/index.html -O /DATA/AppData/caddy/www/index.html
     fi &&
     if [ ! -f /DATA/AppData/caddy/Caddyfile ]; then
-      wget -q https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Caddy/pre-install/Caddyfile -O /DATA/AppData/caddy/Caddyfile
+      wget -q https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Caddy/pre-install/Caddyfile -O /DATA/AppData/caddy/Caddyfile
     fi &&
     chmod -R 755 /DATA/AppData/caddy

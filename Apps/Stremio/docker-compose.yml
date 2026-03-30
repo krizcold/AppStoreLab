@@ -38,11 +38,11 @@ services:
         limits:
           memory: 512M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:80/ || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 15s
 
 
   stremiocommunity:
@@ -84,7 +84,7 @@ services:
         limits:
           memory: 1024M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/ || wget --spider -q http://localhost:8080/ || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3

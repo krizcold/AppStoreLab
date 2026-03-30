@@ -5,17 +5,18 @@ services:
     image: ghcr.io/yundera/nginx-hash-lock:latest
     container_name: yunderadevkit
     restart: unless-stopped
+    expose:
+      - "80"
     labels:
       caddy_0: yunderadevkit-${APP_DOMAIN}
       caddy_0.import: gateway_tls
       caddy_0.reverse_proxy: "{{upstreams 80}}"
-      caddy_1: yunderadevkit-${PUBLIC_IP_DASH}.nip.io
+      caddy_1: yunderadevkit-${APP_PUBLIC_IP_DASH}.nip.io
       caddy_1.import: gateway_tls
       caddy_1.reverse_proxy: "{{upstreams 80}}"
-      caddy_2: yunderadevkit-${PUBLIC_IP_DASH}.sslip.io
+      caddy_2: yunderadevkit-${APP_PUBLIC_IP_DASH}.sslip.io
       caddy_2.reverse_proxy: "{{upstreams 80}}"
-    expose:
-      - "80"
+    cpu_shares: 50
     user: "root"
     environment:
       AUTH_HASH: $AUTH_HASH
@@ -75,6 +76,19 @@ services:
       PCS_PUBLIC_IP: $PCS_PUBLIC_IP
       PCS_PUBLIC_IPV6: $PCS_PUBLIC_IPV6
       PCS_EMAIL: $PCS_EMAIL
+
+      # APP environment variables (new standard)
+      APP_DEFAULT_PASSWORD: $APP_DEFAULT_PASSWORD
+      APP_DOMAIN: $APP_DOMAIN
+      APP_DATA_ROOT: $APP_DATA_ROOT
+      APP_PUBLIC_IP: $APP_PUBLIC_IP
+      APP_PUBLIC_IPV4: $APP_PUBLIC_IPV4
+      APP_PUBLIC_IPV6: $APP_PUBLIC_IPV6
+      APP_EMAIL: $APP_EMAIL
+      APP_NET: $APP_NET
+
+      # IP with dashes for Caddy nip.io/sslip.io labels
+      APP_PUBLIC_IP_DASH: $APP_PUBLIC_IP_DASH
 
       # REF variables
       REF_DOMAIN: $REF_DOMAIN
@@ -169,4 +183,3 @@ x-casaos:
   store_app_id: yunderadevkit
   is_uncontrolled: false
   index: /?hash=$AUTH_HASH
-  webui_port: 80

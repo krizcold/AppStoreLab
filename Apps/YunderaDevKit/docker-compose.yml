@@ -35,7 +35,7 @@ services:
       - NET_ADMIN
 
   yunderadevkitapp:
-    image: ghcr.io/krizcold/yundera-dev-kit:1.1.12
+    image: ghcr.io/krizcold/yundera-dev-kit:1.1.13
     container_name: yunderadevkitapp
     restart: unless-stopped
     user: "root"

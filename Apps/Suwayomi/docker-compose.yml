@@ -67,6 +67,7 @@ networks:
 
 x-casaos:
   main: suwayomi
+  webui_port: 80
   index: /
   store_app_id: suwayomi
   pre-install-cmd: |
@@ -78,12 +79,12 @@ x-casaos:
   author: Yundera Team
   category: Media
   developer: Suwayomi Project
-  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Suwayomi/icon.png
+  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Suwayomi/icon.png
   screenshot_link:
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Suwayomi/screenshot-1.png
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Suwayomi/screenshot-2.png
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Suwayomi/screenshot-3.png
-  thumbnail: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Suwayomi/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Suwayomi/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Suwayomi/screenshot-2.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Suwayomi/screenshot-3.png
+  thumbnail: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Suwayomi/screenshot-1.png
   title:
     en_us: Suwayomi
   tagline:

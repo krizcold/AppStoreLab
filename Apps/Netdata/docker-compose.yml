@@ -36,7 +36,7 @@ services:
       - SYS_ADMIN
       - NET_ADMIN
   netdata:
-    image: netdata/netdata:v2.8.5
+    image: netdata/netdata:v2.9.0
     hostname: netdata
     user: 0:0
     environment:
@@ -59,6 +59,7 @@ services:
       - /var/log:/host/var/log/:ro
       - /var/run/docker.sock:/var/run/docker.sock/:ro
     restart: unless-stopped
+    cpu_shares: 90
     deploy:
       resources:
         limits:
@@ -91,18 +92,18 @@ x-casaos:
     es_es: Monitoreo de rendimiento y salud en tiempo real para sistemas, contenedores y aplicaciones. Monitorea todo con granularidad por segundo y hermosos paneles interactivos.
     fr_fr: Surveillance des performances et de la santé en temps réel pour les systèmes, conteneurs et applications. Surveillez tout avec une granularité à la seconde et de magnifiques tableaux de bord interactifs.
   developer: Netdata Inc.
-  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Netdata/icon.png
+  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Netdata/icon.png
   screenshot_link:
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Netdata/screenshot-1.png
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Netdata/screenshot-2.png
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Netdata/screenshot-3.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Netdata/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Netdata/screenshot-2.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Netdata/screenshot-3.png
   tagline:
     en_us: Real-time system performance monitoring with beautiful dashboards
     ko_kr: 아름다운 대시보드로 실시간 시스템 성능 모니터링
     zh_cn: 使用精美仪表板进行实时系统性能监控
     es_es: Monitoreo de rendimiento del sistema en tiempo real con hermosos paneles
     fr_fr: Surveillance des performances du système en temps réel avec de beaux tableaux de bord
-  thumbnail: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Netdata/thumbnail.png
+  thumbnail: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/Netdata/thumbnail.png
   title:
     en_us: Netdata
   tips:

@@ -2,23 +2,23 @@ name: n8n
 
 services:
   n8n:
-    image: n8nio/n8n:2.6.4
+    image: n8nio/n8n:2.14.2
     container_name: n8n
     restart: unless-stopped
     user: "1000:1000"
-    labels:
-      caddy_0: n8n-${APP_DOMAIN}
-      caddy_0.import: gateway_tls
-      caddy_0.reverse_proxy: "{{upstreams 80}}"
-      caddy_1: n8n-${PUBLIC_IP_DASH}.nip.io
-      caddy_1.import: gateway_tls
-      caddy_1.reverse_proxy: "{{upstreams 80}}"
-      caddy_2: n8n-${PUBLIC_IP_DASH}.sslip.io
-      caddy_2.reverse_proxy: "{{upstreams 80}}"
     networks:
       - pcs
     expose:
       - 80
+    labels:
+      caddy_0: n8n-${APP_DOMAIN}
+      caddy_0.import: gateway_tls
+      caddy_0.reverse_proxy: "{{upstreams 80}}"
+      caddy_1: n8n-${APP_PUBLIC_IP_DASH}.nip.io
+      caddy_1.import: gateway_tls
+      caddy_1.reverse_proxy: "{{upstreams 80}}"
+      caddy_2: n8n-${APP_PUBLIC_IP_DASH}.sslip.io
+      caddy_2.reverse_proxy: "{{upstreams 80}}"
     volumes:
       - /DATA/AppData/$AppID/data/:/home/node/.n8n
     environment:
@@ -28,13 +28,15 @@ services:
       GENERIC_TIMEZONE: $TZ
       N8N_PORT: 80
       N8N_PROTOCOL: https
-      WEBHOOK_URL: https://n8n-$PCS_DOMAIN/
+      N8N_EDITOR_BASE_URL: https://n8n-${APP_DOMAIN}/
+      WEBHOOK_URL: https://n8n-${APP_DOMAIN}/
+      NODE_ENV: production_self_hosted
       DB_TYPE: postgresdb
       DB_POSTGRESDB_HOST: n8n-postgres
       DB_POSTGRESDB_PORT: 5432
       DB_POSTGRESDB_DATABASE: n8n
       DB_POSTGRESDB_USER: n8n
-      DB_POSTGRESDB_PASSWORD: $PCS_DEFAULT_PASSWORD
+      DB_POSTGRESDB_PASSWORD: $APP_DEFAULT_PASSWORD
     depends_on:
       - postgres
     deploy:
@@ -44,10 +46,10 @@ services:
           cpus: '1.0'
         reservations:
           memory: 512M
-    cpu_shares: 50
+    cpu_shares: 70
 
   postgres:
-    image: postgres:16-alpine
+    image: postgres:16.13-alpine
     container_name: n8n-postgres
     restart: unless-stopped
     user: "0:0"
@@ -60,7 +62,7 @@ services:
       PGID: $PGID
       POSTGRES_DB: n8n
       POSTGRES_USER: n8n
-      POSTGRES_PASSWORD: $PCS_DEFAULT_PASSWORD
+      POSTGRES_PASSWORD: $APP_DEFAULT_PASSWORD
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
     deploy:
       resources:
@@ -73,6 +75,7 @@ services:
 
 networks:
   pcs:
+    name: pcs
     external: true
 
 x-casaos:

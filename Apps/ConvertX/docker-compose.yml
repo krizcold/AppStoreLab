@@ -26,6 +26,11 @@ services:
       - convertx-backend
     networks:
       - pcs
+    cpu_shares: 80
+    deploy:
+      resources:
+        limits:
+          memory: 128M
     privileged: true
     cap_add:
       - SYS_ADMIN
@@ -40,12 +45,11 @@ services:
       resources:
         limits:
           memory: 2G
-          cpus: '1.0'
     environment:
       - JWT_SECRET=$APP_DEFAULT_PASSWORD
       - ACCOUNT_REGISTRATION=false
       - HTTP_ALLOWED=true
-      - ALLOW_UNAUTHENTICATED=false
+      - ALLOW_UNAUTHENTICATED=true
       - AUTO_DELETE_EVERY_N_HOURS=24
       - HOME=/tmp/convertx-home
     volumes:
@@ -77,12 +81,12 @@ x-casaos:
   author: Yundera Team
   category: Utilities
   developer: C4illin
-  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/ConvertX/icon.png
+  icon: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/ConvertX/icon.png
   screenshot_link:
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/ConvertX/screenshot-1.png
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/ConvertX/screenshot-2.png
-    - https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/ConvertX/screenshot-3.png
-  thumbnail: https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/ConvertX/thumbnail.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/ConvertX/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/ConvertX/screenshot-2.png
+    - https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/ConvertX/screenshot-3.png
+  thumbnail: https://cdn.jsdelivr.net/gh/Yundera/AppStoreLab@main/Apps/ConvertX/thumbnail.png
   title:
     en_us: ConvertX
   tagline:

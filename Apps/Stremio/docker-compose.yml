@@ -1,22 +1,49 @@
 name: stremio
 
 services:
+  stremio:
+    image: ghcr.io/yundera/nginx-hash-lock:1.0.5
+    container_name: stremio
+    restart: unless-stopped
+    user: "root"
+    expose:
+      - 80
+    labels:
+      caddy_0: stremio-${APP_DOMAIN}
+      caddy_0.import: gateway_tls
+      caddy_0.reverse_proxy: "{{upstreams 80}}"
+      caddy_1: stremio-${APP_PUBLIC_IP_DASH}.nip.io
+      caddy_1.import: gateway_tls
+      caddy_1.reverse_proxy: "{{upstreams 80}}"
+      caddy_2: stremio-${APP_PUBLIC_IP_DASH}.sslip.io
+      caddy_2.reverse_proxy: "{{upstreams 80}}"
+    environment:
+      BACKEND_HOST: "stremiocommunity"
+      BACKEND_PORT: "8080"
+      LISTEN_PORT: "80"
+    tmpfs:
+      - /var/cache/nginx:size=50M
+    depends_on:
+      - stremiocommunity
+    networks:
+      - pcs
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "3"
+    cpu_shares: 70
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+
   stremiocommunity:
     image: tsaridas/stremio-docker:v1.2.12
     container_name: stremiocommunity
     restart: unless-stopped
     user: "0:0"
-    expose:
-      - 8080
-    labels:
-      caddy_0: stremio-${APP_DOMAIN}
-      caddy_0.import: gateway_tls
-      caddy_0.reverse_proxy: "{{upstreams 8080}}"
-      caddy_1: stremio-${APP_PUBLIC_IP_DASH}.nip.io
-      caddy_1.import: gateway_tls
-      caddy_1.reverse_proxy: "{{upstreams 8080}}"
-      caddy_2: stremio-${APP_PUBLIC_IP_DASH}.sslip.io
-      caddy_2.reverse_proxy: "{{upstreams 8080}}"
     extra_hosts:
       - "stremiotorrentbridge-${APP_DOMAIN}:host-gateway"
     environment:
@@ -63,7 +90,7 @@ x-casaos:
     - amd64
     - arm64
     - arm/v7
-  main: stremiocommunity
+  main: stremio
   author: Yundera
   developer: Yundera
   icon: https://www.stremio.com/website/stremio-logo-small.png
@@ -94,7 +121,7 @@ x-casaos:
   store_app_id: stremio
   is_uncontrolled: false
   index: /
-  webui_port: 8080
+  webui_port: 80
   tips:
     before_install:
       en_us: |

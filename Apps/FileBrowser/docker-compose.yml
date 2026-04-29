@@ -43,6 +43,7 @@ networks:
 
 x-casaos:
   pre-install-cmd: |
+    docker run --rm -v /DATA/AppData/filebrowser:/data alpine sh -c "mkdir -p /data/db && chown -R $PUID:$PGID /data" &&
     docker run --rm --user $PUID:$PGID -v /DATA/AppData/filebrowser/db/:/db/ filebrowser/filebrowser:v2.63.2 config init --database /db/database.db &&
     docker run --rm --user $PUID:$PGID -v /DATA/AppData/filebrowser/db/:/db/ filebrowser/filebrowser:v2.63.2 users add admin $APP_DEFAULT_PASSWORD --perm.admin --database /db/database.db
   architectures:
